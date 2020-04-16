@@ -11,6 +11,9 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/.bin")
 # Set source files
 set(PG_FETCH_SOURCE
     src/main.c
+    src/pgf/pgfmem.c
+    src/pgf/pgfstr.c
+    src/pgf/clopts.c
 )
 
 # Configure executable
