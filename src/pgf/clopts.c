@@ -2,13 +2,50 @@
 #include "pgf/pgfmem.h"
 
 #include <assert.h>
+#include <stdlib.h>
 
 #define RESERVE_SIZE(a, b) (##a->reserved * sizeof(##b))
 
-// Wraps argc and argv into a single struct.
-struct PGF_CommandArguments PGF_WrapArguments(int argc, const char** argv)
+// Create CommandArguments from argc and argv.
+struct PGF_CommandArguments* PGF_CreateArguments(int argc, const char** argv)
 {
-    return (struct PGF_CommandArguments){ argc, argv };
+    struct PGF_CommandArguments* args = PGF_Malloc(sizeof(struct PGF_CommandArguments));
+    args->argc = argc;
+
+    args->argv = PGF_Malloc(argc * sizeof(struct PGF_String*));
+    for (int i = 0; i < argc; ++i)
+    {
+        args->argv[i] = PGF_CreateString(argv[i]);
+    }
+
+    return args;
+}
+
+// Pop an argument from a CommandArguments struct.
+struct PGF_String* PGF_PopArgument(struct PGF_CommandArguments* args, size_t index)
+{
+    assert(index < args->argc);
+
+    struct PGF_String* arg = args->argv[index];
+    for (; index < args->argc - 1; ++index)
+    {
+        args->argv[index] = args->argv[index + 1];
+    }
+
+    args->argv[args->argc--] = NULL;
+    return arg;
+}
+
+// Free a CommandArguments struct.
+void PGF_FreeArguments(struct PGF_CommandArguments* args)
+{
+    for (int i = 0; i < args->argc; ++i)
+    {
+        PGF_FreeString(args->argv[i]);
+    }
+
+    PGF_Free(args->argv, args->argc * sizeof(struct PGF_String*));
+    PGF_Free(args, sizeof(struct PGF_CommandArguments));
 }
 
 // Create a PGF_CommandOption struct.
@@ -138,5 +175,46 @@ void PGF_SetOptionValueInt(struct PGF_CommandOptions* copts, const char* option,
 // Bind arguments to the options.
 void PGF_ProcessArguments(struct PGF_CommandOptions* copts, const struct PGF_CommandArguments* args)
 {
-    // ...
+    int prefixLength = 0;
+    for (int i = 0; i < args->argc;)
+    {
+        struct PGF_String arg = *args->argv[i];
+        prefixLength = (PGF_StringStartsWithC(&arg, "--") ? 2 : (PGF_StringStartsWithC(&arg, "-") ? 1 : 0));
+
+        if (prefixLength)
+        {
+            arg.value += prefixLength;
+            struct PGF_CommandOptionValue* optValue = PGF_GetOption(copts, arg.value);
+
+            if (optValue)
+            {
+                switch (optValue->type)
+                {
+                case String:
+                    if (optValue->value.string)
+                    {
+                        PGF_FreeString(optValue->value.string);
+                    }
+
+                    optValue->value.string = PGF_PopArgument(args, i + 1);
+                    break;
+
+                case Int:
+                    struct PGF_String* str = PGF_PopArgument(args, i + 1);
+                    optValue->value.num    = atoi(str->value);
+
+                    PGF_FreeString(str);
+                    break;
+
+                case Bool: default:
+                    optValue->value.bool = 1;
+                    break;
+                }
+            }
+
+            PGF_FreeString(PGF_PopArgument(args, i));
+        }
+
+        ++i;
+    }
 }

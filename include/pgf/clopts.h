@@ -3,10 +3,12 @@
 
 #include "pgfstr.h"
 
+#define OPTION(copts, name, shortName, valueType) PGF_AddOption(copts, PGF_CreateCommandOption(#name, #shortName), valueType);
+
 struct PGF_CommandArguments
 {
     int argc;
-    const char** argv;
+    struct PGF_String** argv;
 };
 
 enum PGF_CommandOptionValueType
@@ -38,8 +40,14 @@ struct PGF_CommandOptions
     size_t reserved;
 };
 
-// Wraps argc and argv into a single struct.
-struct PGF_CommandArguments PGF_WrapArguments(int argc, const char** argv);
+// Create CommandArguments from argc and argv.
+struct PGF_CommandArguments* PGF_CreateArguments(int argc, const char** argv);
+
+// Pop an argument from a CommandArguments struct.
+struct PGF_String* PGF_PopArgument(struct PGF_CommandArguments* args, size_t index);
+
+// Free a CommandArguments struct.
+void PGF_FreeArguments(struct PGF_CommandArguments* args);
 
 // Create a PGF_CommandOption struct.
 struct PGF_CommandOption* PGF_CreateCommandOption(const char* shortName, const char* longName);
