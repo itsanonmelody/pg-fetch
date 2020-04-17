@@ -16,5 +16,10 @@ set(PG_FETCH_SOURCE
     src/pgf/clopts.c
 )
 
+# Set include directories
+include_directories(
+    include
+)
+
 # Configure executable
 add_executable(pg-fetch ${PG_FETCH_SOURCE})
