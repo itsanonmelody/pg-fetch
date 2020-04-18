@@ -11,15 +11,15 @@ void DisplayHelp()
     std::cout << "Usage: pg-fetch [options] message..." << std::endl
               << "  -h, --help          displays this message" << std::endl
               << "      --max           sets max word of message" << std::endl
-              << "  -p, --prefix        sets prefix of message" << std::endl;
+              << "      --prefix        sets prefix of message" << std::endl;
 }
 
 int main(int argc, const char* argv[])
 {
     pgf::CommandOptions options;
-    options.AddOption("help",  "h", pgf::CommandOptionValueType::Bool);
-    options.AddOption("max",   "",  pgf::CommandOptionValueType::Int);
-    options.AddOption("prefix", "p", pgf::CommandOptionValueType::String);
+    options.AddOption("help",   'h',  pgf::CommandOptionValueType::Bool);
+    options.AddOption("max",    '\0', pgf::CommandOptionValueType::Int);
+    options.AddOption("prefix", '\0',  pgf::CommandOptionValueType::String);
 
     std::vector<std::string> args;
     args.reserve(argc - 1);

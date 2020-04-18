@@ -9,7 +9,7 @@ namespace pgf
     struct CommandOptionName
     {
         std::string name;
-        std::string shorName;
+        char shortName;
     };
 
     enum class CommandOptionValueType
@@ -38,9 +38,13 @@ namespace pgf
         CommandOptions& operator=(CommandOptions&  other) = delete;
         CommandOptions& operator=(CommandOptions&& other) = delete;
 
-        void AddOption(const std::string& name, const std::string& shortName, const CommandOptionValueType& type);
+        void AddOption(const std::string& name, char shortName, const CommandOptionValueType& type);
         std::vector<CommandOptionValue>::iterator       FindOptionValue(const std::string& name);
         std::vector<CommandOptionValue>::const_iterator FindOptionValue(const std::string& name) const;
+        std::vector<CommandOptionValue>::iterator       FindOptionValue(char name);
+        std::vector<CommandOptionValue>::const_iterator FindOptionValue(char name) const;
+        bool HasOption(const std::string& name);
+        bool HasOption(char name);
 
         void SetOptionValue(const std::string& name, bool value);
         void SetOptionValue(const std::string& name, int value);
