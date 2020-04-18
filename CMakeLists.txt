@@ -11,6 +11,8 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/.bin")
 # Set source files
 set(PG_FETCH_SOURCE
     src/main.cpp
+    src/cli.cpp
+    src/util.cpp
 )
 
 # Set include directories
