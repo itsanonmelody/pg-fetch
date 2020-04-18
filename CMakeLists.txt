@@ -1,6 +1,9 @@
 cmake_minimum_required(VERSION 3.8)
 project(pg-fetch CXX)
 
+# Configure options
+option(PG_FETCH_BUILD_TESTS "Build test programs" ON)
+
 # Set C standard
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -22,3 +25,8 @@ include_directories(
 
 # Configure executable
 add_executable(pg-fetch ${PG_FETCH_SOURCE})
+
+# Build tests
+IF(PG_FETCH_BUILD_TESTS)
+    add_subdirectory(tests)
+ENDIF()
