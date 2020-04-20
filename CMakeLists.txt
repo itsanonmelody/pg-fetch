@@ -2,7 +2,8 @@ cmake_minimum_required(VERSION 3.8)
 project(pg-fetch CXX)
 
 # Configure options
-option(PG_FETCH_BUILD_TESTS "Build test programs" ON)
+option(PG_FETCH_BUILD_TESTS "Build test programs"      ON )
+option(PG_FETCH_BUILD_32BIT "Build programs as 32 bit" ON )
 
 # Set C standard
 set(CMAKE_CXX_STANDARD 17)
@@ -11,8 +12,14 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # Set output directory
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/.bin")
 
-# Find libpq
-# find_package(PostgreSQL REQUIRED)
+# Use 32 bit libpq
+IF(PG_FETCH_BUILD_32BIT)
+    set(PostgreSQL_FOUND ON CACHE BOOL "PostgreSQL found")
+    set(PostgreSQL_LIBRARIES "C:/Program Files (x86)/PostgreSQL/10/lib/libpq.lib" CACHE STRING "PostgreSQL library files")
+    set(PostgreSQL_INCLUDE_DIRS "C:/Program Files (x86)/PostgreSQL/10/include;C:/Program Files (x86)/PostgreSQL/10/include/server" CACHE STRING "PostgreSQL include directories")
+    set(PostgreSQL_LIBRARY_DIRS "C:/Program Files (x86)/PostgreSQL/10/lib" CACHE STRING "PostgreSQL library directories")
+    set(PostgreSQL_VERSION_STRING "10.12" CACHE STRING "PostgreSQL version")
+ENDIF()
 
 # Set source files
 set(PG_FETCH_SOURCE
@@ -23,17 +30,17 @@ set(PG_FETCH_SOURCE
 
 # Set libraries
 set(PG_FETCH_LIBRARIES
-    # ${PostgreSQL_LIBRARIES}
     pqxx
 )
 
 # Set include directories
 include_directories(
     include
+    deps/libpqxx/include
 )
 
 # Add third-party dependencies
-set(SKIP_BUILD_TEST ON CACHE BOOL "Skip libpqxx build tests" FORCE)
+set(BUILD_TEST OFF CACHE BOOL "Build libpqxx test builds" FORCE)
 add_subdirectory(deps/libpqxx)
 
 # Configure executable
