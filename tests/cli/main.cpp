@@ -48,9 +48,12 @@ int main(int argc, const char* argv[])
         args.insert(args.begin(), prefix);
     }
 
+    int max = std::get<int>(options.FindOptionValue("max")->data);
+    auto end = max ? (args.begin() + max) : args.end();
+
     std::copy(
         args.begin(),
-        args.end(),
+        end,
         std::ostream_iterator<std::string>(std::cout, " ")
     );
 

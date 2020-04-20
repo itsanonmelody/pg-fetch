@@ -1,4 +1,6 @@
 .vscode/
+.db/
 .bin/
 .build/
 tests/.bin/
+log-db.txt

@@ -157,7 +157,6 @@ namespace pgf
 
             if (util::StartsWith(arg, "--"))
             {
-                args.erase(args.begin() + (i--));
                 arg = util::ToLower(arg.substr(2));
 
                 if (!HasOption(arg))
@@ -165,7 +164,7 @@ namespace pgf
                     continue;
                 }
 
-                auto& optValue = this->FindOptionValue(arg);
+                auto optValue = this->FindOptionValue(arg);
                 if (optValue == m_values.end())
                     continue;
                 
@@ -192,11 +191,12 @@ namespace pgf
                     optValue->data = true;
                     break;
                 }
+
+                args.erase(args.begin() + (i--));
             }
 
             else if (util::StartsWith(arg, "-"))
             {
-                args.erase(args.begin() + (i--));
                 arg = util::ToLower(arg.substr(1));
 
                 for (char c : arg)
@@ -204,7 +204,7 @@ namespace pgf
                     if (!HasOption(c))
                         continue;
                     
-                    auto& optValue = this->FindOptionValue(c);
+                    auto optValue = this->FindOptionValue(c);
                     if (optValue == m_values.end())
                         continue;
                     
@@ -232,6 +232,8 @@ namespace pgf
                         break;
                     }
                 }
+                
+                args.erase(args.begin() + (i--));
             }
         }
     }
