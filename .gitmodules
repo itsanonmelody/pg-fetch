@@ -1,3 +1,6 @@
 [submodule "deps/libpqxx"]
 	path = deps/libpqxx
 	url = https://github.com/jtv/libpqxx
+[submodule "deps/shapelib"]
+	path = deps/shapelib
+	url = https://github.com/OSGeo/shapelib

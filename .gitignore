@@ -5,3 +5,4 @@
 tests/.bin/
 *.dbf
 log-db.txt
+pg_types.txt

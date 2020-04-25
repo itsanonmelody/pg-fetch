@@ -24,5 +24,6 @@ target_link_libraries(pq pqxx)
 add_executable(
     dbf
     dbf/main.cpp
+    ../src/dbf.cpp
 )
-target_link_libraries(dbf pqxx)
+target_link_libraries(dbf pqxx shapelib)

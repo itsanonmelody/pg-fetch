@@ -23,3 +23,15 @@ std::string util::ToLower(const std::string& source)
 
     return lower;
 }
+
+// int util::GetEndianess()
+// {
+//     union Data
+//     {
+//         int value;
+//         char bytes[4];
+//     };
+    
+//     static int endianess = (Data{0x01020304}.bytes[0] == 0x01) ? BIG_ENDIAN : LITTLE_ENDIAN;
+//     return endianess;
+// }
